@@ -1,0 +1,7 @@
+.main {
+  width: 500px;
+  margin: 100px auto;
+  border: 1px solid black;
+  padding: 20px;
+  border-radius: 5px;
+}

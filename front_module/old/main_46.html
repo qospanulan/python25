@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Название вкладки</title>
+</head>
+<body>
+    <!-- div - контейнер. Блок HTML разметки сгруппированный вместе. -->
+    <!-- style - доп параметр любого тэга, определяет стилистические параметры. -->
+    <!-- background - параметр стиля, который определяет задний фон объекта. (Можно использовать как цвета, так и картинки). -->
+    <!-- width - параметр стиля, который определяет ширину объекта. -->
+    <!-- height - параметр стиля, который определяет высоту объекта. -->
+    <!-- vw - View Width -> Ширина видимости. Это единица измерения, которая берет процент от видимой ширины экрана -->
+    <!-- vh - View Height -> Высота видимости. Это единица измерения, которая берет процент от видимой высоты экрана -->
+
+    <!-- display - параметр стиля, который определяет "характер" отображения на сайте. По стандарту block -->
+    <!-- block - вариант параметра display, который располагает элементы друг на друге вертикально -->
+    <!-- none - вариант параметра display, который полностью скрывает элемент -->
+    <!-- inline - вариант параметра display, который располагает элементы друг за другом горизонтально -->
+    <!-- flex - вариант параметра display, который располагает элементы друг за другом горизонтально пропорциями -->
+    <!-- flex(как отдельный параметр стиля) - определяет какую часть пропорции экрана элемент занимает -->
+
+    <div style="width: 100vw;">
+        <img src="https://www.gordonramsay.com/assets/Uploads/_resampled/CroppedFocusedImage192072050-50-DSCF1163.jpg">
+    </div>
+    <div style="display: flex;">
+        <div style="height: 65vh; flex: 20; background: #003049;">
+            <h1 style="color: white;">Ingredients</h1>
+            <ul style="color: white;">
+                <li>8 each bone-in chicken thighs (about 3-4 pounds)</li>
+                <li>Flaky sea salt and fresh cracked pepper, to taste</li>
+                <li>Olive oil, as needed</li>
+                <li>2-3 tablespoons all-purpose flour</li>
+                <li>Pinch of chili flakes, to taste</li>
+                <li>1 lemon, zested</li>
+            </ul>
+        </div>
+        <div style="height: 65vh; flex: 80; background: #fdf0d5;">
+            <h1>Cooking Instructions</h1>
+            <ol>
+                <li>Preheat oven to 425˚F.</li>
+                <li>Prepare chicken thighs, seasoning skin-side generously with salt and pepper. Heat a large fry pan
+                    over medium-high heat, drizzle with olive oil and sear thighs, skin side down until caramelized,
+                    about 3-5 minutes. Dust chicken thighs with flour and generously season with salt, pepper, chili
+                    flakes and lemon zest. Flip thighs over and “fry” flour into rendered chicken fat for 2-3 minutes,
+                    remove chicken thighs and set aside while preparing gravy.</li>
+                <li>For the gravy - Add bacon to pan, cooking until crisp and scraping up caramelized bits. Add onions
+                    and garlic to the pan, cooking until just tender and fragrant, about a minute. Slice 1 lemon into
+                    wedges and scatter around the pan along with fresh herbs, cook for another minute. Deglaze with
+                    cider and simmer until reduced by half. Stir in hot chicken stock and bring to a simmer.</li>
+                <li>Return chicken thighs to the pan, skin side up, nestling into the gravy. Zest remaining lemon over
+                    chicken and season with salt, pepper, and chili flakes. Pop into the oven to roast until crispy,
+                    about 20 minutes or until juices run clear. Serve straight out of the pan, garnishing with sliced
+                    lemon and fresh herbs.</li>
+            </ol>
+        </div>
+    </div>
+
+</body>
+</html>

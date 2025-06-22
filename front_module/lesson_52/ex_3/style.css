@@ -1,0 +1,22 @@
+.main {
+  width: 500px;
+  margin: 100px auto;
+  border: 1px solid black;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+#square {
+  width: 100px;
+  height: 100px;
+  background-color: red;
+  margin: auto;
+}
+
+#square:hover {
+  background-color: green;
+}
+
+.btn-div {
+  margin: 10px auto;
+}
