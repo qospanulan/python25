@@ -9,7 +9,6 @@ async function loadData() {
   }).then((response) => response.json());
 
   users = response.data;
-  console.log(users);
 
   for (i = 0; i < users.length; i++) {
     const userElem = document.createElement("div");
