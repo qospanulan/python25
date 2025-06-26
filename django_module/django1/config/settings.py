@@ -9,11 +9,19 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# print("f1:", Path(__file__).resolve())
+# print("f2:", Path(__file__).resolve().parent)
+# print("f3:", Path(__file__).resolve().parent.parent)
+# print("f4:", BASE_DIR / '.env')
+
+load_dotenv(BASE_DIR / '.env')
 
 
 # Quick-start development settings - unsuitable for production
@@ -37,6 +45,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    ################################
+    # pip installed
+    ################################
+    'blog',
 ]
 
 MIDDLEWARE = [
@@ -71,11 +83,15 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
+# ALT + ENTER
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME', 'python25_django1'),
+        'USER': os.environ.get('DB_USER', 'postgres'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', 'xxx'),
+        'HOST': os.environ.get('DB_HOST', 'localhost'), # '127.0.0.1'
+        'PORT': int(os.environ.get('DB_PORT', 5432))
     }
 }
 
