@@ -30,3 +30,7 @@ class Blog(models.Model):
 # - blog
 # - comments
 # - likes
+
+class Post(models.Model):
+    content = models.TextField()
+    blog = models.ForeignKey(Blog, on_delete=models.PROTECT)
