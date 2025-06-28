@@ -33,4 +33,4 @@ class Blog(models.Model):
 
 class Post(models.Model):
     content = models.TextField()
-    blog = models.ForeignKey(Blog, on_delete=models.PROTECT)
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
