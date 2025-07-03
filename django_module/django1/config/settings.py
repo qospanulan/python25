@@ -80,8 +80,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-print(os.environ.get('DB_PASSWORD', 'xxx'))
-
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 # ALT + ENTER

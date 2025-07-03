@@ -6,7 +6,8 @@ from blog.models import Post
 
 def get_posts(request):
 
-    posts = Post.objects.all()
+    # posts = Post.objects.all()
+    posts = Post.objects.filter(created_at=updated_at)
 
     return JsonResponse([
         {
