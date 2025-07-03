@@ -1,9 +1,9 @@
 
 class Q:
 
-    def __init__(self, **kwargs):
+    def __init__(self, statement="", **kwargs):
         self.table_name = "post"
-        self.statement = ""
+        self.statement = statement
         for key, value in kwargs.items():
             if not self.statement == "":
                 self.statement += " AND "
@@ -38,13 +38,13 @@ class Q:
         if not isinstance(other, Q):
             raise TypeError(f"Оператор | невозможна между <class 'Q'> и {type(other)}")
 
-        return f"{self.statement} OR {other.statement}"
+        return Q(statement=f"{self.statement} OR {other.statement}")
 
     def __and__(self, other):
         if not isinstance(other, Q):
             raise TypeError(f"Оператор & невозможна между <class 'Q'> и {type(other)}")
 
-        return f"{self.statement} AND {other.statement}"
+        return Q(statement=f"{self.statement} AND {other.statement}")
 
 
 class F:
@@ -75,8 +75,10 @@ class ORM:
             if "WHERE" not in qs:
                 qs += f"\nWHERE "
 
-            for statement in args:
-                qs += statement
+            for q_obj in args:
+                qs += q_obj.statement
+                qs += " AND "
+            qs = qs[:-5]
 
         for key, value in kwargs.items():
             if "WHERE" not in qs:
@@ -131,7 +133,10 @@ class Post:
 # qs = Post.objects.all()
 # qs = Post.objects.filter(id__in=['2', '4', '5'], content__contains="xxx")
 # qs = Post.objects.filter(created_at__gt=F("updated_at"))
-qs = Post.objects.filter(Q(id__in=(2, 3)) | Q(content__contains="ц"))
+qs = Post.objects.filter(
+    Q(id__in=(2, 3)) | Q(content__contains="ц") &
+    Q(title="xxx") | Q(id=2)
+)
 
 print(qs)
 
