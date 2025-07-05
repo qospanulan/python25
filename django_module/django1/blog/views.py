@@ -27,6 +27,15 @@ def get_posts_list(request):
     )
 
 
+def get_post_detail(request, post_id):
+
+    print("======================================")
+    print(f"Post id: {post_id}")
+    print("======================================")
+
+    return HttpResponse("test")
+
+
 def get_hello_world(request: HttpRequest):
 
     params: dict = request.GET
