@@ -1,13 +1,53 @@
-from django.http import JsonResponse
+from django.db.models import F
+from django.http import JsonResponse, HttpResponse, HttpRequest
 from django.shortcuts import render
 
 from blog.models import Post
 
+# Function Based View
+# Class Based View
 
-def get_posts(request):
+# Params - GET
+# Payload/Body - POST
 
-    # posts = Post.objects.all()
-    posts = Post.objects.filter(created_at=updated_at)
+
+def get_posts_list(request):
+
+    posts = Post.objects.all()
+
+    template_name = "blog/posts_list.html"
+    context = {
+        "posts": posts
+    }
+
+    return render(
+        request=request,
+        template_name=template_name,
+        context=context
+    )
+
+
+def get_hello_world(request: HttpRequest):
+
+    params: dict = request.GET
+    name = params.get("name", "World")
+    context = {
+        "name_value": name
+    }
+
+    # template: Template = loader.get_template("blog/hello_world.html")
+    # return HttpResponse(template.render(context, request))
+
+    return render(
+        request=request,
+        template_name="blog/hello_world.html",
+        context=context
+    )
+
+def get_json_posts(request):
+
+    posts = Post.objects.all()
+    # posts = Post.objects.filter(created_at=F("updated_at"))
 
     return JsonResponse([
         {
@@ -16,7 +56,7 @@ def get_posts(request):
             "blog_id": post.blog_id
         } for post in posts
     ], safe=False)
-
+    #
     # return JsonResponse([
     #     {
     #         "id": 1,

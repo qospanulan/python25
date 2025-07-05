@@ -46,6 +46,8 @@ class Q:
 
         return Q(statement=f"{self.statement} AND {other.statement}")
 
+    def __invert__(self):
+        pass
 
 class F:
 
