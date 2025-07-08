@@ -29,11 +29,19 @@ def get_posts_list(request):
 
 def get_post_detail(request, post_id):
 
-    print("======================================")
-    print(f"Post id: {post_id}")
-    print("======================================")
+    # post = Post.objects.filter(id=post_id)[0]
+    post = Post.objects.get(id=post_id)
 
-    return HttpResponse("test")
+    template_name = "blog/post_detail.html"
+    context = {
+        "post": post
+    }
+
+    return render(
+        request=request,
+        template_name=template_name,
+        context=context
+    )
 
 
 def get_hello_world(request: HttpRequest):
