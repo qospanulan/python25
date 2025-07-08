@@ -1,14 +1,57 @@
 from django.db.models import F
 from django.http import JsonResponse, HttpResponse, HttpRequest
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
-from blog.models import Post
+from blog.models import Post, Blog
+
 
 # Function Based View
 # Class Based View
 
 # Params - GET
 # Payload/Body - POST
+# Create Read Update Delete
+
+def create_post(request: HttpRequest):
+    """
+    GET -> Форму для заполнения при создании поста
+    POST -> Обработка при нажатии кнопки создать
+    """
+
+    print(f"Method is: {request.method}")
+
+    if request.method == 'GET':
+        print("================================================")
+        print("in GET method")
+        print("================================================")
+        template_name = "blog/post_create.html"
+
+        return render(
+            request=request,
+            template_name=template_name
+        )
+
+    elif request.method == 'POST':
+        print("================================================")
+        print("in POST method:")
+        print(request.POST)
+        print("================================================")
+        content = request.POST.get("content")
+        blog_id = int(request.POST.get("blog_id"))
+
+        blog = Blog.objects.get(id=blog_id)
+
+        post = Post(
+            content=content,
+            blog=blog
+        )
+
+        post.save()
+
+        return redirect('get_post_detail', post.id)
+
+    else:
+        return HttpResponse("Method Not Allowed", status=400)
 
 
 def get_posts_list(request):
