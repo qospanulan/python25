@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     ################################
     'django_extensions',
+    'rest_framework',
     ################################
     'blog',
 ]
@@ -82,7 +83,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME', 'python25_django1'),
+        'NAME': os.environ.get('DB_NAME', 'python25_django2'),
         'USER': os.environ.get('DB_USER', 'postgres'),
         'PASSWORD': os.environ.get('DB_PASSWORD', 'xxx'),
         'HOST': os.environ.get('DB_HOST', 'localhost'), # '127.0.0.1'
