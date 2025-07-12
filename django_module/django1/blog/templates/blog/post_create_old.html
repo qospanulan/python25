@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Post OLD</title>
+</head>
+<body>
+
+<div class="main">
+    <form method="POST">
+        {% csrf_token %}
+        <p>
+            <label for="content">Post Content (OLD):</label>
+            <input type="text" id="content" name="content" placeholder="Type content...">
+        </p>
+
+        <p>
+            <label>Blog ID:</label>
+<!--            <input type="number" id="blog_id" name="blog_id" placeholder="Type Blog ID...">-->
+            <select name="blog_id">
+                <option value selected >---------</option>
+                {% for blog in blogs %}
+                    <option value="{{ blog.id }}">{{ blog.name }} ({{ blog.id }})</option>
+                {% endfor %}
+            </select>
+        </p>
+
+        <p>
+            <input type="submit" value="Создать">
+        </p>
+    </form>
+</div>
+
+</body>
+</html>

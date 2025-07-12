@@ -35,8 +35,8 @@ class Blog(models.Model):
 # - likes
 
 class Post(models.Model):
-    content = models.TextField()
-    blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
+    content = models.TextField(verbose_name="Контент")
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE, verbose_name="Блог")
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

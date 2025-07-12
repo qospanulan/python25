@@ -1,3 +1,4 @@
+from django import forms, views
 from django.db.models import F
 from django.http import JsonResponse, HttpResponse, HttpRequest
 from django.shortcuts import render, redirect
@@ -12,7 +13,92 @@ from blog.models import Post, Blog
 # Payload/Body - POST
 # Create Read Update Delete
 
+
+class PostCreateForm(forms.ModelForm):
+
+    class Meta:
+        model = Post
+        fields = ('content', 'blog')
+        labels = {
+            'content': 'Новый контент'
+        }
+
+# class PostCreateForm(forms.Form):
+#     content = forms.TextInput()
+
+class PostCreateView(views.View):
+
+    def get(self, request):
+        template_name = "blog/post_create.html"
+
+        form = PostCreateForm()
+        return render(
+            request=request,
+            template_name=template_name,
+            context={
+                "form": form
+            }
+        )
+
+    def post(self, request):
+        form = PostCreateForm(request.POST)
+
+        if form.is_valid():
+            # if not form.cleaned_data.get("content").endswith('...'):
+            #     form.cleaned_data["content"] += "..."
+
+            new_post = form.save()
+
+            return redirect(
+                'get_post_detail',
+                new_post.id
+            )
+
 def create_post(request: HttpRequest):
+    """
+    GET -> Форму для заполнения при создании поста
+    POST -> Обработка при нажатии кнопки создать
+    """
+
+    if request.method == 'GET':
+        template_name = "blog/post_create.html"
+
+        form = PostCreateForm()
+        return render(
+            request=request,
+            template_name=template_name,
+            context={
+                "form": form
+            }
+        )
+
+    elif request.method == 'POST':
+
+        form = PostCreateForm(request.POST)
+
+        if form.is_valid():
+
+            # if not form.cleaned_data.get("content").endswith('...'):
+            #     form.cleaned_data["content"] += "..."
+
+            print("=======================================")
+            print(f"form.cleaned_data: {form.cleaned_data}")
+            print(f"form.data: {form.data}")
+            print(f"request.POST: {request.POST}")
+            print("=======================================")
+
+            new_post = form.save()
+
+            return redirect(
+                'get_post_detail',
+                new_post.id
+            )
+
+    else:
+        return HttpResponse("Method Not Allowed", status=400)
+
+
+def create_post_old(request: HttpRequest):
     """
     GET -> Форму для заполнения при создании поста
     POST -> Обработка при нажатии кнопки создать
@@ -24,11 +110,15 @@ def create_post(request: HttpRequest):
         print("================================================")
         print("in GET method")
         print("================================================")
-        template_name = "blog/post_create.html"
+        template_name = "blog/post_create_old.html"
+        blogs = Blog.objects.all()
 
         return render(
             request=request,
-            template_name=template_name
+            template_name=template_name,
+            context={
+                "blogs": blogs
+            }
         )
 
     elif request.method == 'POST':
@@ -52,6 +142,23 @@ def create_post(request: HttpRequest):
 
     else:
         return HttpResponse("Method Not Allowed", status=400)
+
+
+class PostListView(views.View):
+
+    def get(self, request):
+        posts = Post.objects.all()
+
+        template_name = "blog/posts_list.html"
+        context = {
+            "posts": posts
+        }
+
+        return render(
+            request=request,
+            template_name=template_name,
+            context=context
+        )
 
 
 def get_posts_list(request):
