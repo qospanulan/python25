@@ -22,19 +22,6 @@ class BlogListAPIView(views.APIView):
 
     def post(self, request):
 
-        # data = request.data
-        #
-        # blog = Blog(
-        #     name=data.get("name"),
-        #     description=data.get("description")
-        # )
-        #
-        # blog.save()
-        #
-        # return Response(
-        #     BlogSerializer(instance=blog).data
-        # )
-
         data = request.data
 
         serializer = BlogCreateSerializer(data=data)
