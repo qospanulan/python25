@@ -26,10 +26,10 @@ load_dotenv(BASE_DIR / '.env')
 SECRET_KEY = 'django-insecure-m-v+sdd40(s4s7v-q-25530tw5-xr^kr^hlw!zt*7gdw7f-2py'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
 
@@ -43,11 +43,13 @@ INSTALLED_APPS = [
     ################################
     'django_extensions',
     'rest_framework',
+    'corsheaders',
     ################################
     'blog',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
