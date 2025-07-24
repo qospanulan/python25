@@ -2,16 +2,46 @@ from django.db.models import QuerySet, Q
 from django.http import JsonResponse, HttpRequest
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import views, status
+from rest_framework import views, status, generics
 
 from blog.constants import HIDDEN
 from blog.models import Blog
 from blog.serializers import (
     BlogListOutputSerializer, BlogCreateInputSerializer,
-    BlogCreateOutputSerializer, BlogDetailOutputSerializer, BlogFullUpdateInputSerializer,
-    BlogStatusUpdateInputSerializer
+    BlogCreateOutputSerializer, BlogDetailOutputSerializer,
+    BlogFullUpdateInputSerializer, BlogStatusUpdateInputSerializer
 )
 
+# === CLASS BASED VIEWS: GENERICS ======================================================
+
+class BlogListGenericAPIView(generics.ListCreateAPIView):
+    # queryset = Blog.objects.all()
+    # serializer_class = BlogListOutputSerializer
+
+    def get_queryset(self):
+        qs = Blog.objects.all()
+        # qs = qs.filter()
+        return qs
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return BlogListOutputSerializer
+        else:
+            return BlogCreateOutputSerializer
+
+    def perform_create(self, serializer):
+        # serializer.validated_data['name'] = serializer.validated_data['name'].upper()
+        serializer.save()
+
+
+class BlogRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogDetailOutputSerializer
+    lookup_field = 'id'
+    lookup_url_kwarg = 'blog_id'
+
+
+# === CLASS BASED VIEWS: API VIEW ======================================================
 
 class BlogListAPIView(views.APIView):
 
@@ -21,20 +51,15 @@ class BlogListAPIView(views.APIView):
         #     ~Q(status=HIDDEN)
         # )
 
-        return Response(
-            BlogListOutputSerializer(
-                blogs,
-                many=True
-            ).data
-        )
+        serializer = BlogListOutputSerializer(blogs, many=True)
+        return Response(serializer.data)
 
     def post(self, request):
-        data = request.data
-
-        serializer = BlogCreateInputSerializer(data=data)
+        serializer = BlogCreateInputSerializer(data=request.data)
 
         serializer.is_valid(raise_exception=True)
 
+        # serializer.validated_data['name'] = serializer.validated_data['name'].upper()
         blog: Blog = serializer.save()
 
         return Response(
@@ -45,7 +70,13 @@ class BlogListAPIView(views.APIView):
 class BlogDetailDeleteAPIView(views.APIView):
 
     def get(self, request, blog_id):
-        blog: Blog = Blog.objects.get(id=blog_id)
+        try:
+            blog: Blog = Blog.objects.get(id=blog_id)
+        except Blog.DoesNotExist:
+            return Response(
+                {"detail": "No Blog matches the given query."},
+                status=status.HTTP_404_NOT_FOUND
+            )
 
         serializer = BlogDetailOutputSerializer(
             instance=blog
@@ -120,7 +151,7 @@ class BlogDetailDeleteAPIView(views.APIView):
         )
 
 
-
+# === FUNCTION BASED VIEWS ======================================================
 @api_view(http_method_names=['GET'])
 def get_blog_list(request):
     blogs: QuerySet[Blog] = Blog.objects.all()
