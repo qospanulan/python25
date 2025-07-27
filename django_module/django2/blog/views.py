@@ -55,7 +55,7 @@ class BlogListAPIView(views.APIView):
         #     ~Q(status=HIDDEN)
         # )
 
-        print("===========================================")
+        print("== GET =========================================")
         print(f"User: {request.user}")
         print("===========================================")
 
@@ -68,7 +68,7 @@ class BlogListAPIView(views.APIView):
 
         serializer.is_valid(raise_exception=True)
 
-        # serializer.validated_data['author'] = request.user
+        serializer.validated_data['author'] = request.user
         blog: Blog = serializer.save()
 
         return Response(

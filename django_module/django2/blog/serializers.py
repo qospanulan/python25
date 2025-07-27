@@ -13,7 +13,7 @@ class BlogCreateInputSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Blog
-        fields = ['name', 'description']
+        fields = ['name', 'description', 'tags']
 
 
 class BlogCreateOutputSerializer(serializers.ModelSerializer):
