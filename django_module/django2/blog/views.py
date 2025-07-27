@@ -1,6 +1,8 @@
 from django.db.models import QuerySet, Q
 from django.http import JsonResponse, HttpRequest
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework import views, status, generics
 
@@ -45,21 +47,28 @@ class BlogRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
 
 class BlogListAPIView(views.APIView):
 
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         blogs: QuerySet[Blog] = Blog.objects.all()
         # blogs: QuerySet[Blog] = Blog.objects.filter(
         #     ~Q(status=HIDDEN)
         # )
 
+        print("===========================================")
+        print(f"User: {request.user}")
+        print("===========================================")
+
         serializer = BlogListOutputSerializer(blogs, many=True)
         return Response(serializer.data)
+
 
     def post(self, request):
         serializer = BlogCreateInputSerializer(data=request.data)
 
         serializer.is_valid(raise_exception=True)
 
-        # serializer.validated_data['name'] = serializer.validated_data['name'].upper()
+        # serializer.validated_data['author'] = request.user
         blog: Blog = serializer.save()
 
         return Response(
