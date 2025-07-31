@@ -9,18 +9,18 @@ class BlogListOutputSerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
 
-class BlogCreateInputSerializer(serializers.ModelSerializer):
+# class BlogCreateInputSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model = Blog
+#         fields = ['name', 'description', 'tags']
 
-    class Meta:
-        model = Blog
-        fields = ['name', 'description', 'tags']
 
-
-class BlogCreateOutputSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Blog
-        fields = '__all__'
+# class BlogCreateOutputSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model = Blog
+#         fields = '__all__'
 
 
 class BlogDetailOutputSerializer(serializers.ModelSerializer):

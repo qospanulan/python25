@@ -1,12 +1,14 @@
 from django.urls import path
 
 from blog.views import (
-    BlogListAPIView, BlogDetailAPIView, BlogUpdateAPIView, BlogDeleteAPIView, BlogUpdateStatusAPIView
+    BlogListAPIView, BlogDetailAPIView,
+    BlogUpdateAPIView, BlogDeleteAPIView,
+    BlogUpdateStatusAPIView, BlogCreateAPIView
 )
 
 urlpatterns = [
     path('', BlogListAPIView.as_view(), name='get_blog_list'),  # /blog/
-    path('create/', BlogListAPIView.as_view(), name='create_blog'),  # /blog/create/
+    path('create/', BlogCreateAPIView.as_view(), name='create_blog'),  # /blog/create/
     path('<int:blog_id>/', BlogDetailAPIView.as_view(), name='get_blog_detail'),  # /blog/2/
     path(
         '<int:blog_id>/update/',

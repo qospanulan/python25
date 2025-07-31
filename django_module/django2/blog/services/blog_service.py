@@ -28,10 +28,13 @@ class BlogService:
 
         blog = Blog(
             author_id=user_id,
-            **data
+            name=data.get('name'),
+            description=data.get('description')
         )
 
         blog.save()
+
+        blog.tags.set(data.get('tags'))  # tags = objects
 
         return blog
 
