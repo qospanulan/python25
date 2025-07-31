@@ -1,4 +1,4 @@
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework import views, status
 
@@ -12,7 +12,7 @@ from blog.services.blog_service import BlogService
 
 class BlogListAPIView(views.APIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request):
 
@@ -22,6 +22,10 @@ class BlogListAPIView(views.APIView):
         serializer = BlogListOutputSerializer(blogs, many=True)
         return Response(serializer.data)
 
+
+class BlogCreateAPIView(views.APIView):
+
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         serializer = BlogCreateInputSerializer(data=request.data)
@@ -39,7 +43,7 @@ class BlogListAPIView(views.APIView):
         )
 
 
-class BlogDetailDeleteAPIView(views.APIView):
+class BlogDetailAPIView(views.APIView):
 
     def get(self, request, blog_id):
         try:
@@ -64,6 +68,9 @@ class BlogDetailDeleteAPIView(views.APIView):
                 {"detail": "No Blog matches the given query."},
                 status=status.HTTP_404_NOT_FOUND
             )
+
+
+class BlogUpdateAPIView(views.APIView):
 
     def put(self, request, blog_id):
 
@@ -90,6 +97,8 @@ class BlogDetailDeleteAPIView(views.APIView):
             )
 
 
+class BlogUpdateStatusAPIView(views.APIView):
+
     def patch(self, request, blog_id):
         try:
             serializer = BlogStatusUpdateInputSerializer(data=request.data)
@@ -114,6 +123,7 @@ class BlogDetailDeleteAPIView(views.APIView):
             )
 
 
+class BlogDeleteAPIView(views.APIView):
 
     def delete(self, request, blog_id):
 
