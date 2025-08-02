@@ -2,10 +2,6 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework import views, status, serializers
 
-from blog.serializers import (
-    BlogListOutputSerializer, BlogDetailOutputSerializer,
-    BlogFullUpdateInputSerializer, BlogStatusUpdateInputSerializer
-)
 from blog.services.blog_service import BlogService
 
 
@@ -13,12 +9,16 @@ class BlogListAPIView(views.APIView):
 
     permission_classes = [AllowAny]
 
+    class OutputSerializer(serializers.Serializer):
+        id = serializers.IntegerField()
+        name = serializers.CharField(max_length=120)
+
     def get(self, request):
 
         service = BlogService()
         blogs = service.get_all_blogs()
 
-        serializer = BlogListOutputSerializer(blogs, many=True)
+        serializer = self.OutputSerializer(blogs, many=True)
         return Response(serializer.data)
 
 
@@ -37,6 +37,7 @@ class BlogCreateAPIView(views.APIView):
         )
 
     class OutputSerializer(serializers.Serializer):
+        id = serializers.IntegerField()
         name = serializers.CharField(max_length=120)
         description = serializers.CharField()
 
@@ -63,14 +64,31 @@ class BlogCreateAPIView(views.APIView):
             data=serializer.validated_data
         )
 
-        return Response(
-            self.OutputSerializer(instance=blog).data
-        )
+        output_serializer = self.OutputSerializer(instance=blog)
+
+        return Response(output_serializer.data)
 
 
 class BlogDetailAPIView(views.APIView):
 
     permission_classes = [AllowAny]
+
+    class OutputSerializer(serializers.Serializer):
+        id = serializers.IntegerField()
+        name = serializers.CharField(max_length=120)
+        description = serializers.CharField()
+
+        author = serializers.IntegerField()
+        status = serializers.CharField(max_length=100)
+        created_at = serializers.DateTimeField()
+        updated_at = serializers.DateTimeField()
+
+        tags = serializers.ListSerializer(
+            child=serializers.IntegerField(),
+            allow_null=True,
+            allow_empty=True,
+            default=[]
+        )
 
     def get(self, request, blog_id):
         try:
@@ -81,7 +99,7 @@ class BlogDetailAPIView(views.APIView):
                 blog_id=blog_id
             )
 
-            serializer = BlogDetailOutputSerializer(
+            serializer = self.OutputSerializer(
                 instance=blog
             )
 
@@ -99,10 +117,31 @@ class BlogDetailAPIView(views.APIView):
 
 class BlogUpdateAPIView(views.APIView):
 
+    class InputSerializer(serializers.Serializer):
+        name = serializers.CharField(max_length=120)
+        description = serializers.CharField()
+
+    class OutputSerializer(serializers.Serializer):
+        id = serializers.IntegerField()
+        name = serializers.CharField(max_length=120)
+        description = serializers.CharField()
+
+        author = serializers.IntegerField()
+        status = serializers.CharField(max_length=100)
+        created_at = serializers.DateTimeField()
+        updated_at = serializers.DateTimeField()
+
+        tags = serializers.ListSerializer(
+            child=serializers.IntegerField(),
+            allow_null=True,
+            allow_empty=True,
+            default=[]
+        )
+
     def put(self, request, blog_id):
 
         try:
-            serializer = BlogFullUpdateInputSerializer(data=request.data)
+            serializer = self.InputSerializer(data=request.data)
 
             serializer.is_valid(raise_exception=True)
 
@@ -113,7 +152,7 @@ class BlogUpdateAPIView(views.APIView):
             )
 
             return Response(
-                BlogDetailOutputSerializer(
+                self.OutputSerializer(
                     instance=blog
                 ).data
             )
@@ -126,9 +165,29 @@ class BlogUpdateAPIView(views.APIView):
 
 class BlogUpdateStatusAPIView(views.APIView):
 
+    class InputSerializer(serializers.Serializer):
+        status = serializers.CharField(max_length=100)
+
+    class OutputSerializer(serializers.Serializer):
+        id = serializers.IntegerField()
+        name = serializers.CharField(max_length=120)
+        description = serializers.CharField()
+
+        author = serializers.IntegerField()
+        status = serializers.CharField(max_length=100)
+        created_at = serializers.DateTimeField()
+        updated_at = serializers.DateTimeField()
+
+        tags = serializers.ListSerializer(
+            child=serializers.IntegerField(),
+            allow_null=True,
+            allow_empty=True,
+            default=[]
+        )
+
     def patch(self, request, blog_id):
         try:
-            serializer = BlogStatusUpdateInputSerializer(data=request.data)
+            serializer = self.InputSerializer(data=request.data)
 
             serializer.is_valid(raise_exception=True)
 
@@ -139,7 +198,7 @@ class BlogUpdateStatusAPIView(views.APIView):
             )
 
             return Response(
-                BlogDetailOutputSerializer(
+                self.OutputSerializer(
                     instance=blog
                 ).data
             )

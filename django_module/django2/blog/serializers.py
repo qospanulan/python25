@@ -1,12 +1,12 @@
-from rest_framework import serializers
+# from rest_framework import serializers
+#
+# from blog.models import Blog
 
-from blog.models import Blog
 
-
-class BlogListOutputSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Blog
-        fields = ['id', 'name']
+# class BlogListOutputSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Blog
+#         fields = ['id', 'name']
 
 
 # class BlogCreateInputSerializer(serializers.ModelSerializer):
@@ -23,23 +23,23 @@ class BlogListOutputSerializer(serializers.ModelSerializer):
 #         fields = '__all__'
 
 
-class BlogDetailOutputSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Blog
-        fields = '__all__'
-
-
-class BlogFullUpdateInputSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Blog
-        fields = ['name', 'description']
-
-
-class BlogStatusUpdateInputSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Blog
-        fields = ['status']
+# class BlogDetailOutputSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model = Blog
+#         fields = '__all__'
+#
+#
+# class BlogFullUpdateInputSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model = Blog
+#         fields = ['name', 'description']
+#
+#
+# class BlogStatusUpdateInputSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model = Blog
+#         fields = ['status']
 

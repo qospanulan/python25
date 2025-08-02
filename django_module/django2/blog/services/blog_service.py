@@ -1,3 +1,5 @@
+from functools import lru_cache
+
 from django.db.models import QuerySet
 
 from blog.models import Blog, Post
@@ -76,3 +78,8 @@ class BlogService:
         blog: Blog = Blog.objects.get(id=blog_id)
 
         blog.delete()
+
+
+@lru_cache
+def get_blog_service():
+    return BlogService()
