@@ -8,8 +8,7 @@ from blog.models import Blog, Post
 class BlogService:
 
     def get_all_blogs(self) -> list[Post]:
-
-        blogs: QuerySet[Blog] = Blog.objects.all()
+        blogs: QuerySet[Blog] = Blog.objects.all().select_related("author")
         # blogs: QuerySet[Blog] = Blog.objects.filter(
         #     ~Q(status=HIDDEN)
         # )
@@ -21,7 +20,6 @@ class BlogService:
             user_id: int,
             data: dict
     ) -> Blog:
-
         # blog = Blog(
         #     name=data.get('name'),
         #     description=data.get('description'),
@@ -41,8 +39,12 @@ class BlogService:
         return blog
 
     def get_blog_by_id(self, blog_id: int) -> Blog:
-
-        blog: Blog = Blog.objects.get(id=blog_id)
+        blog: Blog = (
+            Blog.objects
+            .prefetch_related("post_set", "tags")
+            .select_related("author")
+            .get(id=blog_id)
+        )
 
         return blog
 
@@ -74,12 +76,11 @@ class BlogService:
         return blog
 
     def delete_blog(self, blog_id: int) -> None:
-
         blog: Blog = Blog.objects.get(id=blog_id)
 
         blog.delete()
 
 
 @lru_cache
-def get_blog_service():
+def get_blog_service() -> BlogService:
     return BlogService()

@@ -2,7 +2,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework import views, status, serializers
 
-from blog.services.blog_service import BlogService
+from blog.services.blog_service import get_blog_service
+from utils.serializers import inline_serializer
 
 
 class BlogListAPIView(views.APIView):
@@ -13,9 +14,16 @@ class BlogListAPIView(views.APIView):
         id = serializers.IntegerField()
         name = serializers.CharField(max_length=120)
 
+        author = inline_serializer(
+            fields={
+                "id": serializers.IntegerField(),
+                "username": serializers.CharField()
+            }
+        )
+
     def get(self, request):
 
-        service = BlogService()
+        service = get_blog_service()
         blogs = service.get_all_blogs()
 
         serializer = self.OutputSerializer(blogs, many=True)
@@ -58,7 +66,7 @@ class BlogCreateAPIView(views.APIView):
 
         serializer.is_valid(raise_exception=True)
 
-        service = BlogService()
+        service = get_blog_service()
         blog = service.create_blog(
             user_id=request.user.id,
             data=serializer.validated_data
@@ -78,7 +86,21 @@ class BlogDetailAPIView(views.APIView):
         name = serializers.CharField(max_length=120)
         description = serializers.CharField()
 
-        author = serializers.IntegerField()
+        author = inline_serializer(
+            fields={
+                "id": serializers.IntegerField(),
+                "username": serializers.CharField()
+            }
+        )
+
+        post_set = inline_serializer(
+            fields={
+                "id": serializers.IntegerField(),
+                "content": serializers.CharField()
+            },
+            many=True
+        )
+
         status = serializers.CharField(max_length=100)
         created_at = serializers.DateTimeField()
         updated_at = serializers.DateTimeField()
@@ -93,7 +115,7 @@ class BlogDetailAPIView(views.APIView):
     def get(self, request, blog_id):
         try:
 
-            service = BlogService()
+            service = get_blog_service()
 
             blog = service.get_blog_by_id(
                 blog_id=blog_id
@@ -145,7 +167,7 @@ class BlogUpdateAPIView(views.APIView):
 
             serializer.is_valid(raise_exception=True)
 
-            service = BlogService()
+            service = get_blog_service()
             blog = service.update_blog(
                 blog_id=blog_id,
                 data=serializer.validated_data
@@ -191,7 +213,7 @@ class BlogUpdateStatusAPIView(views.APIView):
 
             serializer.is_valid(raise_exception=True)
 
-            service = BlogService()
+            service = get_blog_service()
             blog = service.update_status(
                 blog_id=blog_id,
                 new_status=serializer.validated_data.get('status')
@@ -213,7 +235,7 @@ class BlogDeleteAPIView(views.APIView):
 
     def delete(self, request, blog_id):
 
-        service = BlogService()
+        service = get_blog_service()
         service.delete_blog(blog_id=blog_id)
 
         return Response(

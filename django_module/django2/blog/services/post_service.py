@@ -7,13 +7,13 @@ class PostService:
 
     def get_all_posts(self) -> Post:
 
-        posts = Post.objects.all()
+        posts = Post.objects.all().select_related("author", "blog")
 
         return posts
 
     def get_all_posts_by_blog_id(self, blog_id: int) -> Post:
 
-        posts = Post.objects.filter(blog_id=blog_id)
+        posts = Post.objects.filter(blog_id=blog_id).select_related("author", "blog")
 
         return posts
 
@@ -34,5 +34,4 @@ class PostService:
 
 @lru_cache
 def get_post_service() -> PostService:
-    print("get_post_service called!")
     return PostService()

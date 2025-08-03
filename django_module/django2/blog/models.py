@@ -66,3 +66,6 @@ class Post(models.Model):
 
     def __str__(self):
         return f"{self.content[:15]}... ({self.id})"
+
+
+# {modelName}_set
