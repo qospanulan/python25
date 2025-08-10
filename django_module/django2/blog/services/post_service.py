@@ -1,5 +1,7 @@
 from functools import lru_cache
 
+from django.db.models import Q
+
 from blog.models import Post
 from blog.services.blog_service import BlogService, get_blog_service
 
@@ -12,9 +14,18 @@ class PostService:
     ):
         self.blog_service = blog_service
 
-    def get_all_posts(self) -> Post:
+    def get_all_posts(
+            self,
+            search: str | None
+    ) -> Post:
 
         posts = Post.objects.all().select_related("author", "blog")
+
+        if search:
+            posts = posts.filter(
+                Q(content__icontains=search)
+                | Q(blog__name__icontains=search)
+            )
 
         return posts
 

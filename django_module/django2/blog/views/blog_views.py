@@ -1,8 +1,11 @@
+import json
+
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework import views, status, serializers
 
 from blog.services.blog_service import get_blog_service
+from utils.parsers import parse_list_from_str
 from utils.serializers import inline_serializer
 
 
@@ -23,8 +26,19 @@ class BlogListAPIView(views.APIView):
 
     def get(self, request):
 
+        # author_ids: list[str] | None = request.query_params.getlist("author_ids")
+        author_ids: str | None = request.query_params.get("author_ids")
+        name: str | None = request.query_params.get("name")
+
+        if author_ids:
+            # author_ids: list = parse_list_from_str(author_ids)
+            author_ids: list = json.loads(author_ids)
+
         service = get_blog_service()
-        blogs = service.get_all_blogs()
+        blogs = service.get_all_blogs(
+            author_ids=author_ids,
+            name=name
+        )
 
         serializer = self.OutputSerializer(blogs, many=True)
         return Response(serializer.data)

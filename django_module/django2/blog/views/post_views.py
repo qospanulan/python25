@@ -6,11 +6,6 @@ from blog.services.post_service import get_post_service
 from utils.serializers import inline_serializer
 
 
-# class AuthorSerializer(serializers.Serializer):
-#     id = serializers.IntegerField()
-#     username = serializers.CharField()
-
-
 class PostListAPIView(views.APIView):
 
     permission_classes = [AllowAny]
@@ -35,9 +30,13 @@ class PostListAPIView(views.APIView):
 
     def get(self, request):
 
+        search = request.query_params.get("search")
+
         post_service = get_post_service()
 
-        posts = post_service.get_all_posts()
+        posts = post_service.get_all_posts(
+            search=search
+        )
 
         serializer = self.OutputSerializer(
             instance=posts,

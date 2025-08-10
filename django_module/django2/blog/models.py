@@ -59,13 +59,14 @@ class Post(models.Model):
     )
 
     content = models.TextField()
-    blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
+    blog = models.ForeignKey(
+        Blog,
+        on_delete=models.CASCADE,
+        # related_name="post_set" # {modelName}_set
+    )
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.content[:15]}... ({self.id})"
-
-
-# {modelName}_set

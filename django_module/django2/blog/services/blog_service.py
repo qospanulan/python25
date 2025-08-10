@@ -7,11 +7,22 @@ from blog.models import Blog, Post
 
 class BlogService:
 
-    def get_all_blogs(self) -> list[Post]:
+    def get_all_blogs(
+            self,
+            author_ids: list[int] | None,
+            name: str | None
+    ) -> list[Post]:
+
         blogs: QuerySet[Blog] = Blog.objects.all().select_related("author")
-        # blogs: QuerySet[Blog] = Blog.objects.filter(
-        #     ~Q(status=HIDDEN)
-        # )
+
+        if author_ids:
+            blogs = blogs.filter(
+                author_id__in=author_ids
+            )
+        if name:
+            blogs = blogs.filter(
+                name=name
+            )
 
         return blogs
 
