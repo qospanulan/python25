@@ -17,8 +17,8 @@ class BlogListAPIView(views.APIView):
 
     class OutputSerializer(serializers.Serializer):
         count = serializers.IntegerField()
-        next = serializers.CharField()
-        previous = serializers.CharField()
+        # next = serializers.CharField()
+        # previous = serializers.CharField()
         results = inline_serializer(
             fields={
                 "id": serializers.IntegerField(),
@@ -40,7 +40,8 @@ class BlogListAPIView(views.APIView):
         author_ids: str | None = request.query_params.get("author_ids")
         name: str | None = request.query_params.get("name")
 
-        page: int = request.query_params.get("page", 1)
+        page: int = int(request.query_params.get("page", 1))
+        page_size: int | None = request.query_params.get("page_size")
 
         if author_ids:
             # author_ids: list = parse_list_from_str(author_ids)
@@ -51,7 +52,8 @@ class BlogListAPIView(views.APIView):
             author_ids=author_ids,
             name=name,
             page=page,
-            url=request.build_absolute_uri()
+            page_size=page_size,
+            # url=request.build_absolute_uri()
         )
 
         serializer = self.OutputSerializer(blogs)

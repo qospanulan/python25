@@ -190,7 +190,7 @@ LOGGING = {
         "django": {
             "handlers": ["console"],
             # "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
-            "level": "INFO",
+            "level": "DEBUG",
             "propagate": False,
         },
     },

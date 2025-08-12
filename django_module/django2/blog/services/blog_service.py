@@ -1,5 +1,6 @@
 from functools import lru_cache
 
+from django.conf import settings
 from django.db.models import QuerySet
 # from rest_framework.pagination import PageNumberPagination
 
@@ -14,7 +15,8 @@ class BlogService:
             author_ids: list[int] | None,
             name: str | None,
             page: int = 1,
-            url: str = ""
+            page_size: int | None = None
+            # url: str = ""
     ) -> dict:
 
         blogs: QuerySet[Blog] = Blog.objects.all().select_related("author")
@@ -28,21 +30,28 @@ class BlogService:
                 name=name
             )
 
-        blogs = blogs.order_by("created_at")
+        if not page_size:
+            page_size = settings.REST_FRAMEWORK.get("PAGE_SIZE", 3)
 
-        paginator = CustomPagePagination(
-            page=page,
-            url=url
-        )
+        bottom = (page - 1) * int(page_size)
+        top = bottom + int(page_size)
+        blogs = blogs.order_by("created_at")[bottom:top]
+        blog_count = Blog.objects.all().count()
 
-        blogs = paginator.paginate_queryset(
-            queryset=blogs
-        )
+        # paginator = CustomPagePagination(
+        #     page=page,
+        #     url=url
+        # )
+
+        # blogs = paginator.paginate_queryset(
+        #     queryset=blogs
+        # )
 
         result_data = {
-            'count': paginator.page.paginator.count,
-            'next': paginator.get_next_link(),
-            'previous': paginator.get_previous_link(),
+            'count': blog_count,
+            # 'count': paginator.page.paginator.count,
+            # 'next': paginator.get_next_link(),
+            # 'previous': paginator.get_previous_link(),
             'results': blogs,
         }
 
