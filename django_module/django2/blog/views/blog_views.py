@@ -1,5 +1,7 @@
 import json
 
+from rest_framework.generics import GenericAPIView
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework import views, status, serializers
@@ -14,14 +16,22 @@ class BlogListAPIView(views.APIView):
     permission_classes = [AllowAny]
 
     class OutputSerializer(serializers.Serializer):
-        id = serializers.IntegerField()
-        name = serializers.CharField(max_length=120)
-
-        author = inline_serializer(
+        count = serializers.IntegerField()
+        next = serializers.CharField()
+        previous = serializers.CharField()
+        results = inline_serializer(
             fields={
                 "id": serializers.IntegerField(),
-                "username": serializers.CharField()
-            }
+                "name": serializers.CharField(max_length=120),
+
+                "author": inline_serializer(
+                    fields={
+                        "id": serializers.IntegerField(),
+                        "username": serializers.CharField()
+                    }
+                )
+            },
+            many=True
         )
 
     def get(self, request):
@@ -30,6 +40,8 @@ class BlogListAPIView(views.APIView):
         author_ids: str | None = request.query_params.get("author_ids")
         name: str | None = request.query_params.get("name")
 
+        page: int = request.query_params.get("page", 1)
+
         if author_ids:
             # author_ids: list = parse_list_from_str(author_ids)
             author_ids: list = json.loads(author_ids)
@@ -37,10 +49,13 @@ class BlogListAPIView(views.APIView):
         service = get_blog_service()
         blogs = service.get_all_blogs(
             author_ids=author_ids,
-            name=name
+            name=name,
+            page=page,
+            url=request.build_absolute_uri()
         )
 
-        serializer = self.OutputSerializer(blogs, many=True)
+        serializer = self.OutputSerializer(blogs)
+
         return Response(serializer.data)
 
 
