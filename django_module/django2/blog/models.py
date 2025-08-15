@@ -70,3 +70,43 @@ class Post(models.Model):
 
     def __str__(self):
         return f"{self.content[:15]}... ({self.id})"
+
+
+class Comment(models.Model):
+    text = models.CharField(max_length=200)
+
+    author = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.CASCADE
+    )
+
+    post = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name="comments"
+    )
+
+    parent_comment = models.ForeignKey(
+        "Comment",
+        on_delete=models.CASCADE,
+        related_name="replies",
+        null=True,
+        blank=True
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.text[:10]}... ({self.pk}) for Post ID: {self.post_id}"
+
+#
+#
+# Еда (1)
+#  - replies = [2, 3]
+#
+# Топ 5 рецептов (2)
+#  - parent_comment = 1
+#
+# Завтрак важен (3)
+#  - parent_comment = 1

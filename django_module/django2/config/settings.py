@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'rest_framework_simplejwt',
+    'django_filters',
     ################################
     'blog',
     'authorization',
@@ -190,7 +191,7 @@ LOGGING = {
         "django": {
             "handlers": ["console"],
             # "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
-            "level": "DEBUG",
+            "level": "INFO",
             "propagate": False,
         },
     },

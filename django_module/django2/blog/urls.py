@@ -5,6 +5,7 @@ from blog.views.blog_views import (
     BlogUpdateAPIView, BlogDeleteAPIView,
     BlogUpdateStatusAPIView, BlogCreateAPIView
 )
+from blog.views.comment_views import CommentListCreateAPIView
 
 from blog.views.post_views import (
     PostListAPIView, BlogPostListAPIView, PostCreateAPIView
@@ -40,7 +41,13 @@ urlpatterns = [
         '<int:blog_id>/posts/create/',
         PostCreateAPIView.as_view(),
         name="get_post_list_by_id"
-    )  # /blog/2/posts/create
+    ),  # /blog/2/posts/create
 
+    # == COMMENT ============
+    path(
+        '<int:post_id>/comments/',
+        CommentListCreateAPIView.as_view(),
+        name="comment_list_create"
+    )
 ]
 

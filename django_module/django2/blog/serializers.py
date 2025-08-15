@@ -1,45 +1,18 @@
-# from rest_framework import serializers
-#
-# from blog.models import Blog
+from rest_framework import serializers
+
+from blog.models import Comment
 
 
-# class BlogListOutputSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Blog
-#         fields = ['id', 'name']
+class CommentListCreateSerializer(serializers.ModelSerializer):
 
-
-# class BlogCreateInputSerializer(serializers.ModelSerializer):
-#
-#     class Meta:
-#         model = Blog
-#         fields = ['name', 'description', 'tags']
-
-
-# class BlogCreateOutputSerializer(serializers.ModelSerializer):
-#
-#     class Meta:
-#         model = Blog
-#         fields = '__all__'
-
-
-# class BlogDetailOutputSerializer(serializers.ModelSerializer):
-#
-#     class Meta:
-#         model = Blog
-#         fields = '__all__'
-#
-#
-# class BlogFullUpdateInputSerializer(serializers.ModelSerializer):
-#
-#     class Meta:
-#         model = Blog
-#         fields = ['name', 'description']
-#
-#
-# class BlogStatusUpdateInputSerializer(serializers.ModelSerializer):
-#
-#     class Meta:
-#         model = Blog
-#         fields = ['status']
-
+    class Meta:
+        model = Comment
+        fields = (
+            'id', 'text' , 'parent_comment',
+            'created_at', 'updated_at',
+            'post_id', 'author_id'
+        )
+        read_only_fields = (
+            'id', 'created_at', 'updated_at',
+            'post_id', 'author_id'
+        )
