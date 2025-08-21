@@ -2,6 +2,7 @@ from functools import lru_cache
 
 from django.db.models import Q
 
+from blog.exceptions import DifferentBlogAndPostError
 from blog.models import Post
 from blog.services.blog_service import BlogService, get_blog_service
 
@@ -47,7 +48,9 @@ class PostService:
         )
 
         if author_id != blog.author.id:
-            raise Exception("Автор пост может создать только под своим блогом.")
+            raise DifferentBlogAndPostError(
+                message="Автор может создать пост только под своим блогом."
+            )
 
         post = Post.objects.create(
             content=content,

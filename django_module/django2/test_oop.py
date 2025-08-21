@@ -23,6 +23,7 @@ class Dog(Animal):
 
 
 c = Cat()
+
 d = Dog()
 
 print("cat:")

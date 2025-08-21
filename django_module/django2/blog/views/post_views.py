@@ -81,30 +81,22 @@ class PostCreateAPIView(views.APIView):
     class OutputSerializer(serializers.Serializer):
         id = serializers.IntegerField()
         content = serializers.CharField(max_length=120)
-        # author =
-        # blog =
 
     def post(self, request, blog_id: int):
 
-        try:
-            input_serializer = self.InputSerializer(
-                data=request.data
-            )
+        input_serializer = self.InputSerializer(
+            data=request.data
+        )
 
-            input_serializer.is_valid(raise_exception=True)
+        input_serializer.is_valid(raise_exception=True)
 
-            post_service = get_post_service()
-            post = post_service.create_post(
-                author_id=request.user.id,
-                blog_id=blog_id,
-                content=input_serializer.validated_data.get("content")
-            )
+        post_service = get_post_service()
+        post = post_service.create_post(
+            author_id=request.user.id,
+            blog_id=blog_id,
+            content=input_serializer.validated_data.get("content")
+        )
 
-            output_serializer = self.OutputSerializer(instance=post)
+        output_serializer = self.OutputSerializer(instance=post)
 
-            return Response(output_serializer.data)
-        except Exception as e:
-            return Response(
-                {"detail": f"Error: {e}"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+        return Response(output_serializer.data)
