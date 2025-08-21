@@ -71,6 +71,17 @@ class Post(models.Model):
     def __str__(self):
         return f"{self.content[:15]}... ({self.id})"
 
+    class Meta:
+        # indexes = [
+        #     models.Index(fields=['author_id', 'content'], name='post_author_content_idx'),
+        # ]
+        constraints = [
+            models.UniqueConstraint(fields=['author_id', 'content'], name='post_author_content_unq_idx')
+        ]
+
+        verbose_name = "Пост" # "Category"
+        verbose_name_plural = "Посты" # "Categories"
+
 
 class Comment(models.Model):
     text = models.CharField(max_length=200)
